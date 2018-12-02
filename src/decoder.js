@@ -11,7 +11,7 @@ module.exports = {
 function decode(invoice) {
   let { prefix, words } = bech32.decode(invoice);
 
-  let { network, amount } = parsePrefix(prefix);
+  let { network, amount, units } = parsePrefix(prefix);
 
   let wordcursor = new WordCursor(words);
 
@@ -111,6 +111,7 @@ function decode(invoice) {
   let result = new Invoice();
   result.network = network;
   result.amount = amount;
+  result.units = units;
   result.timestamp = timestamp;
   result.fields = fields;
   result.unknownFields = unknownFields;
@@ -148,6 +149,7 @@ function parsePrefix(prefix) {
     }
   }
 
+  const units = amount;
   amount = amount === '' ? null : parseInt(amount) * getAmountMultiplier(multiplier);
 
   if (!isValidNetwork(network)) throw new Error('Invalid network');
@@ -156,6 +158,7 @@ function parsePrefix(prefix) {
   return {
     network,
     amount,
+    units,
   };
 }
 
